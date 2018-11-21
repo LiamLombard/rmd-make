@@ -1,0 +1,63 @@
+#! /usr/bin/Rscript
+
+library(rmarkdown)
+
+renderDoc <- function()
+{
+  tryCatch(rmarkdown::render("main.rmd"),
+          error=function(cond)
+          {
+            message("ERROR")
+            message(cond)
+          },
+          warning=function(cond)
+          {
+            message("Warning")
+            message(cond)
+          },
+          finally=
+          {
+            message("")
+          })
+}
+
+lastUpdated <- function()
+{
+  fileNames <- list.files(path = ".", pattern="*.rmd")
+  fileNames1 <- list.files(path = ".", pattern="*.tex")
+  fileNames2 <- list.files(path = ".", pattern="*.sty")
+  sectionFiles <- list.files(path = "./sections", pattern="*.rmd")
+  sectionFiles <- paste("./sections/", sectionFiles, sep="")
+  fileNames <- append(fileNames, fileNames1)
+  fileNames <- append(fileNames, fileNames2)
+  fileNames <- append(fileNames, sectionFiles)
+  latest <- lastUp
+  for (file in fileNames)
+  {
+    if(lastUp < file.mtime(file))
+    {
+      lastUp <- file.mtime(file)
+    }
+  }
+  return(lastUp)
+}
+
+
+lastUp <- 0
+
+lastUp <- lastUpdated()
+latest <- lastUp
+renderDoc()
+
+while(1)
+{
+  lastUp <- lastUpdated()
+  if(latest < lastUp)
+  {
+    latest <- lastUp
+    renderDoc()
+    Sys.sleep(5)
+  }
+  Sys.sleep(1)
+
+}
