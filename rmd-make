@@ -27,7 +27,10 @@ lastUpdated <- function()
   fileNames1 <- list.files(path = ".", pattern="*.tex")
   fileNames2 <- list.files(path = ".", pattern="*.sty")
   sectionFiles <- list.files(path = "./sections", pattern="*.rmd")
-  sectionFiles <- paste("./sections/", sectionFiles, sep="")
+  if(length(sectionFiles) != 0)
+  {
+    sectionFiles <- paste("./sections/", sectionFiles, sep="")
+  }
   fileNames <- append(fileNames, fileNames1)
   fileNames <- append(fileNames, fileNames2)
   fileNames <- append(fileNames, sectionFiles)
